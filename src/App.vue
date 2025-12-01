@@ -3,11 +3,21 @@ import { ref } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 
 const greetMsg = ref("");
+const jsonMsg = ref("");
 const name = ref("");
 
 async function greet() {
   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
   greetMsg.value = await invoke("greet", { name: name.value });
+}
+
+async function testPrintJson() {
+  const testJson = { 
+    name: "test", 
+    value: 123, 
+    nested: { a: 1, b: 2 } 
+  };
+  jsonMsg.value = await invoke("print_json", { json: testJson });
 }
 </script>
 
@@ -33,6 +43,11 @@ async function greet() {
       <button type="submit">Greet</button>
     </form>
     <p>{{ greetMsg }}</p>
+    
+    <div class="row">
+      <button type="button" @click="testPrintJson">Test Print JSON</button>
+    </div>
+    <p>{{ jsonMsg }}</p>
   </main>
 </template>
 
